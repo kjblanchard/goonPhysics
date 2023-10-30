@@ -1,7 +1,0 @@
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/goonPhysics.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/edit_cache.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/rebuild_cache.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/list_install_components.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/install.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/install/local.dir
-/Users/kevin/git/c/goonPhysics/build/CMakeFiles/install/strip.dir
