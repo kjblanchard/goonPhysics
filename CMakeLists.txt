@@ -7,6 +7,8 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+option(INSTALL_STATIC "Should we install this" OFF)
+
 # Add all of our source files
 file(GLOB FILES src/*.c)
 file(GLOB goon_public_header "${goonPhysics_SOURCE_DIR}/include/GoonPhysics/*.h")
@@ -35,5 +37,7 @@ target_include_directories(goonPhysics
 
 target_compile_options(goonPhysics PUBLIC -std=c99 -Wall -pedantic)
 
-install(TARGETS goonPhysics ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
-install(FILES ${goon_public_header} DESTINATION include/goonPhysics)
+if(INSTALL_STATIC)
+    install(TARGETS goonPhysics ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
+    install(FILES ${goon_public_header} DESTINATION include/goonPhysics)
+endif(INSTALL_STATIC)
