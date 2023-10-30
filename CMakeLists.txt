@@ -15,7 +15,7 @@ file(GLOB goon_public_header "${goonPhysics_SOURCE_DIR}/include/GoonPhysics/*.h"
 add_library(goonPhysics
     STATIC
     ${FILES})
-set_property(TARGET goon_sound PROPERTY C_STANDARD 99)
+set_property(TARGET goonPhysics PROPERTY C_STANDARD 99)
 
 find_package(PkgConfig)
 
@@ -29,11 +29,11 @@ if(DEBUG_VARS)
     endforeach()
 endif(DEBUG_VARS)
 
-target_include_directories(goon_sound
+target_include_directories(goonPhysics
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
-target_compile_options(goon_sound PUBLIC -std=c99 -Wall -pedantic)
+target_compile_options(goonPhysics PUBLIC -std=c99 -Wall -pedantic)
 
 install(TARGETS goonPhysics ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
-install(FILES ${goon_public_header} DESTINATION include/chipmunk)
+install(FILES ${goon_public_header} DESTINATION include/goonPhysics)
