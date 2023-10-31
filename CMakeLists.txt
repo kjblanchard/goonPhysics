@@ -7,7 +7,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(INSTALL_STATIC "Should we install this" OFF)
+option(INSTALL_STATIC "Should we install this" ON)
 
 # Add all of our source files
 file(GLOB FILES src/*.c)
@@ -19,7 +19,7 @@ add_library(goonPhysics
     ${FILES})
 set_property(TARGET goonPhysics PROPERTY C_STANDARD 99)
 
-find_package(PkgConfig)
+# find_package(PkgConfig)
 
 # For Debug, print aout all variables.
 if(DEBUG_VARS)
@@ -32,12 +32,12 @@ if(DEBUG_VARS)
 endif(DEBUG_VARS)
 
 target_include_directories(goonPhysics
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 )
 
 target_compile_options(goonPhysics PUBLIC -std=c99 -Wall -pedantic)
 
 if(INSTALL_STATIC)
     install(TARGETS goonPhysics ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
-    install(FILES ${goon_public_header} DESTINATION include/goonPhysics)
+    # install(FILES ${goon_public_header} DESTINATION include/GoonPhysics)
 endif(INSTALL_STATIC)

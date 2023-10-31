@@ -8,5 +8,14 @@
  * @copyright Copyright (c) 2023
  *
  */
+#pragma once
+#include <GoonPhysics/body.h>
 
-int gpInitScene();
+typedef struct gpScene
+{
+    float gravity;
+} gpScene;
+
+void gpInitScene(void);
+void gpSceneSetGravity(gpScene *scene, float);
+int gpSceneAddBody(gpBody* body);
