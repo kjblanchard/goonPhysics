@@ -9,12 +9,14 @@
  *
  */
 #pragma once
-#include "bb.h"
+#include <GoonPhysics/bb.h>
+#include <GoonPhysics/vec.h>
 #include <stdlib.h>
 
 typedef struct gpBody
 {
     gpBB boundingBox;
+    gpVec velocity;
 
 } gpBody;
 
