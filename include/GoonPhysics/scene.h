@@ -16,6 +16,7 @@ typedef struct gpScene
     float gravity;
 } gpScene;
 
-void gpInitScene(void);
-void gpSceneSetGravity(gpScene *scene, float);
+gpScene* gpInitScene(void);
+void gpSceneSetGravity(gpScene *scene, float gravity);
 int gpSceneAddBody(gpBody* body);
+void gpSceneUpdate(gpScene* scene, float gameTime);

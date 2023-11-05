@@ -15,3 +15,4 @@ typedef struct gpBB {
 } gpBB;
 
 gpBB gpBBNew(float x, float y, float w, float h);
+gpBB gpBBCopy(gpBB body);
