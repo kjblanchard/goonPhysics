@@ -26,7 +26,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
     float initialYStep = body->velocity.y * gameTime;
     float iterYStep = initialYStep;
     float stepSize = (int)initialYStep != 0 ? initialYStep > 0 ? 1 : -1 : initialYStep;
-    int shouldStep = 1;
+    int shouldStep = stepSize != 0 ?  1 : 0 ;
     while(shouldStep)
     {
         float bodyInitialY = body->boundingBox.y;
@@ -40,6 +40,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
         // If we are set to be blocked by the other body,
         // then set should step to 0, and revert body back to initial
         }
+        iterYStep += stepSize;
     }
 }
 // private void ApplyYVelocity(GameTime gameTime, double yStep)
