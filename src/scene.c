@@ -160,6 +160,14 @@ int gpSceneAddBody(gpBody *body)
     return _currentNumBodies - 1;
 }
 
+gpBody* gpSceneGetBody(int bodyRef)
+{
+    if(bodyRef < _currentNumBodies && _currentBodies[bodyRef])
+    {
+        return _currentBodies[bodyRef];
+    }
+}
+
 int gpSceneAddStaticBody(gpBody *body)
 {
 }
