@@ -7,7 +7,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(INSTALL_STATIC "Should we install this" ON)
+option(INSTALL_STATIC "Should we install this" OFF)
 
 # Add all of our source files
 file(GLOB FILES src/*.c)
