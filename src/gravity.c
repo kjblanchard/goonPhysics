@@ -47,7 +47,7 @@ static void GravityConstraintY(gpBody *body, float gravityStep, gpSceneGravity *
     body->velocity.y = (float)step;
 }
 
-void gpGravityApplyVelocity(gpBody *body, gpSceneGravity *sceneGravity, float deltaTime)
+void gpGravityBodyStep(gpBody *body, gpSceneGravity *sceneGravity, float deltaTime)
 {
     float gravityStep = sceneGravity->sceneGravity * deltaTime;
     float frictionStep = 0.0;

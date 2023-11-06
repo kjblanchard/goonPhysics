@@ -24,5 +24,5 @@ typedef struct gpSceneGravity
 } gpSceneGravity;
 
 // void gpApplyGravity()
-void gpGravityApplyVelocity(gpBody *body, gpSceneGravity *sceneGravity, float deltaTime);
+void gpGravityBodyStep(gpBody *body, gpSceneGravity *sceneGravity, float deltaTime);
 // void gpApplyGravity(gpBody body, gpBody* collisionBodies, int numCollisionBodies);
