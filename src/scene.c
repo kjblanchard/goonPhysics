@@ -10,6 +10,7 @@ static int _currentCapacityBodies = 4;
 static gpBody **_currentBodies;
 
 static void ApplyYVelocity(gpBody *body, float gameTime);
+static void ApplyXVelocity(gpBody *body, float gameTime);
 
 // static int _currentNumStaticBodies = 0;
 // static int _currentCapacityStaticBodies = 4;
@@ -32,6 +33,7 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
     for (size_t i = 0; i < _currentNumBodies; i++)
     {
         ApplyYVelocity(_currentBodies[i], gameTime);
+        ApplyXVelocity(_currentBodies[i], gameTime);
     }
 }
 
@@ -68,69 +70,40 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
         }
     }
 }
-// private void ApplyYVelocity(GameTime gameTime, double yStep)
-// {
-//     if (yStep >= 1)
-//     {
-//         bool collision = false;
-//         while (yStep >= 1)
-//         {
-//             //Temporarily add 1 to Y and check for collisions
-//             Parent.Location.Y++;
-//             var tilesToCheck = _gravity._tiledGameComponent.LoadedTmxContent.SolidTiles;
-//             tilesToCheck.ForEach(solidTile =>
-//             {
-//                 if (collision)
-//                     return;
-//                 var tileCollider =
-//                     solidTile.GetComponent<BoxColliderComponent>(EngineTags.ComponentTags.BoxCollider);
-//                 var sourceRect = _collider.Bounds;
-//                 if (sourceRect.Intersects(tileCollider.Bounds))
-//                 {
-//                     yStep = 0;
-//                     collision = true;
-//                     Parent.Location.Y--;
-//                     _velocity.Y = 0;
-//                     CollisionEvent(Directions.Down);
-//                 }
-//             });
-//             if (collision)
-//                 break;
-//             yStep--;
-//             // Parent._location.Y++;
-//         }
-//     }
-//     else if (yStep <= -1)
-//     {
-//         bool collision = false;
-//         while (yStep <= -1)
-//         {
-//             //Temporarily add 1 to Y and check for collisions
-//             Parent.Location.Y--;
-//             var tilesToCheck = _gravity._tiledGameComponent.LoadedTmxContent.SolidTiles;
-//             tilesToCheck.ForEach(solidTile =>
-//             {
-//                 if (collision)
-//                     return;
-//                 var tileCollider =
-//                     solidTile.GetComponent<BoxColliderComponent>(EngineTags.ComponentTags.BoxCollider);
-//                 var sourceRect = _collider.Bounds;
-//                 if (sourceRect.Intersects(tileCollider.Bounds))
-//                 {
-//                     yStep = 0;
-//                     collision = true;
-//                     Parent.Location.Y++;
-//                     _velocity.Y = 0;
-//                     CollisionEvent(Directions.Top);
-//                 }
-//             });
-//             if (collision)
-//                 return;
-//             yStep++;
-//             // Parent._location.Y++;
-//         }
-//     }
-// }
+
+static void ApplyXVelocity(gpBody *body, float gameTime)
+{
+    float initialXStep = body->velocity.x * gameTime;
+    float iterXStep = initialXStep;
+    float stepSize = (int)initialXStep != 0 ? initialXStep > 0 ? 1 : -1 : initialXStep;
+    int shouldStep = stepSize != 0 ? 1 : 0;
+    while (shouldStep)
+    {
+        float bodyInitialX = body->boundingBox.x;
+        body->boundingBox.x += stepSize;
+        // Check for collisions for each body
+        // For body in bodies, if collides,
+        // then send out notify for subscribers with info of collision bounding box and body num
+        // If it is a blocking body, then we should set shouldStep to False
+        if (!shouldStep)
+        {
+            // If we are set to be blocked by the other body,
+            // then set should step to 0, and revert body back to initial
+            body->boundingBox.x -= stepSize;
+            continue;
+        }
+        iterXStep -= stepSize;
+        if (iterXStep && fabs(iterXStep) < 1)
+        {
+            // We have a partial step remaining, so add that in a final round.
+            stepSize = iterXStep;
+        }
+        else if (!iterXStep)
+        {
+            shouldStep = 0;
+        }
+    }
+}
 
 gpScene *gpInitScene(void)
 {
