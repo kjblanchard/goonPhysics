@@ -5,16 +5,17 @@
 #include <GoonPhysics/body.h>
 #include <GoonPhysics/gravity.h>
 
+// Rigidbodies
 static int _currentNumBodies = 0;
 static int _currentCapacityBodies = 4;
 static gpBody **_currentBodies;
+//Static Bodies
+static int _currentNumStaticBodies = 0;
+static int _currentCapacityStaticBodies = 4;
+static gpBody **_currentStaticBodies;
 
 static void ApplyYVelocity(gpBody *body, float gameTime);
 static void ApplyXVelocity(gpBody *body, float gameTime);
-
-// static int _currentNumStaticBodies = 0;
-// static int _currentCapacityStaticBodies = 4;
-// static gpBody **_currentStaticBodies;
 
 void gpSceneUpdate(gpScene *scene, float gameTime)
 {
@@ -47,10 +48,11 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
     {
         float bodyInitialY = body->boundingBox.y;
         body->boundingBox.y += stepSize;
-        // Check for collisions for each body
+        // Check for collisions for each static body
+        // If it is a blocking body, then we should set shouldStep to False
+
         // For body in bodies, if collides,
         // then send out notify for subscribers with info of collision bounding box and body num
-        // If it is a blocking body, then we should set shouldStep to False
         if (!shouldStep)
         {
             // If we are set to be blocked by the other body,
@@ -109,6 +111,7 @@ gpScene *gpInitScene(void)
 {
     gpScene *scene = malloc(sizeof(*scene));
     _currentBodies = calloc(_currentCapacityBodies, _currentCapacityBodies * sizeof(gpBody *));
+    _currentStaticBodies = calloc(_currentCapacityStaticBodies, _currentCapacityBodies * sizeof(gpBody *));
     return scene;
 }
 
@@ -132,6 +135,23 @@ int gpSceneAddBody(gpBody *body)
     ++_currentNumBodies;
     return _currentNumBodies - 1;
 }
+int gpSceneAddStaticBody(gpBody* body)
+{
+    if (_currentNumStaticBodies > _currentCapacityStaticBodies / 2)
+    {
+        _currentStaticBodies = realloc(_currentStaticBodies, _currentCapacityStaticBodies * 2 * sizeof(gpBody *));
+        if (_currentStaticBodies == NULL)
+        {
+            fprintf(stderr, "Couldn't reallocate to increase static body size, what the");
+        }
+        _currentCapacityStaticBodies *= 2;
+    }
+    // _currentBodies[_currentNumBodies] = body;
+    _currentStaticBodies[_currentNumStaticBodies] = body;
+    ++_currentNumStaticBodies;
+    return _currentNumStaticBodies - 1;
+
+}
 
 gpBody* gpSceneGetBody(int bodyRef)
 {
@@ -141,6 +161,3 @@ gpBody* gpSceneGetBody(int bodyRef)
     }
 }
 
-int gpSceneAddStaticBody(gpBody *body)
-{
-}
