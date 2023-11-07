@@ -27,10 +27,9 @@ static void GravityConstraintX(gpBody *body, double frictionStep, gpSceneGravity
 
 static void GravityConstraintY(gpBody *body, float gravityStep, gpSceneGravity *sceneGravity)
 {
-    double step;
-    if (body->velocity.y >= 0)
+    double step = body->velocity.y + gravityStep;
+    if (step >= 0)
     {
-        step = body->velocity.y + gravityStep;
         if (step > sceneGravity->sceneMaxYVelocity)
             step = sceneGravity->sceneMaxYVelocity;
         if (step < sceneGravity->sceneMinYVelocity)
@@ -38,7 +37,6 @@ static void GravityConstraintY(gpBody *body, float gravityStep, gpSceneGravity *
     }
     else
     {
-        step = body->velocity.y + gravityStep;
         if (step < -sceneGravity->sceneMaxYVelocity)
             step = -sceneGravity->sceneMaxYVelocity;
         if (step > sceneGravity->sceneMinYVelocity)
