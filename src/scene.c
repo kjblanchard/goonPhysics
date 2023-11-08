@@ -4,12 +4,13 @@
 #include <GoonPhysics/scene.h>
 #include <GoonPhysics/body.h>
 #include <GoonPhysics/gravity.h>
+#include <GoonPhysics/aabb.h>
 
 // Rigidbodies
 static int _currentNumBodies = 0;
 static int _currentCapacityBodies = 4;
 static gpBody **_currentBodies;
-//Static Bodies
+// Static Bodies
 static int _currentNumStaticBodies = 0;
 static int _currentCapacityStaticBodies = 4;
 static gpBody **_currentStaticBodies;
@@ -50,6 +51,13 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
         body->boundingBox.y += stepSize;
         // Check for collisions for each static body
         // If it is a blocking body, then we should set shouldStep to False
+        for (size_t i = 0; i < _currentNumStaticBodies; i++)
+        {
+            gpBody *staticBody = _currentStaticBodies[i];
+            int intersect = gpIntersectBoxBox(&body->boundingBox, &staticBody->boundingBox);
+            if (intersect)
+                shouldStep = 0;
+        }
 
         // For body in bodies, if collides,
         // then send out notify for subscribers with info of collision bounding box and body num
@@ -58,6 +66,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
             // If we are set to be blocked by the other body,
             // then set should step to 0, and revert body back to initial
             body->boundingBox.y -= stepSize;
+            body->velocity.y = 0.0;
             continue;
         }
         iterYStep -= stepSize;
@@ -87,11 +96,20 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
         // For body in bodies, if collides,
         // then send out notify for subscribers with info of collision bounding box and body num
         // If it is a blocking body, then we should set shouldStep to False
+        for (size_t i = 0; i < _currentNumStaticBodies; i++)
+        {
+            gpBody *staticBody = _currentStaticBodies[i];
+            int intersect = gpIntersectBoxBox(&body->boundingBox, &staticBody->boundingBox);
+            if (intersect)
+                shouldStep = 0;
+        }
+
         if (!shouldStep)
         {
             // If we are set to be blocked by the other body,
             // then set should step to 0, and revert body back to initial
             body->boundingBox.x -= stepSize;
+            body->velocity.x = 0.0;
             continue;
         }
         iterXStep -= stepSize;
@@ -135,7 +153,7 @@ int gpSceneAddBody(gpBody *body)
     ++_currentNumBodies;
     return _currentNumBodies - 1;
 }
-int gpSceneAddStaticBody(gpBody* body)
+int gpSceneAddStaticBody(gpBody *body)
 {
     if (_currentNumStaticBodies > _currentCapacityStaticBodies / 2)
     {
@@ -150,14 +168,12 @@ int gpSceneAddStaticBody(gpBody* body)
     _currentStaticBodies[_currentNumStaticBodies] = body;
     ++_currentNumStaticBodies;
     return _currentNumStaticBodies - 1;
-
 }
 
-gpBody* gpSceneGetBody(int bodyRef)
+gpBody *gpSceneGetBody(int bodyRef)
 {
-    if(bodyRef < _currentNumBodies && _currentBodies[bodyRef])
+    if (bodyRef < _currentNumBodies && _currentBodies[bodyRef])
     {
         return _currentBodies[bodyRef];
     }
 }
-
