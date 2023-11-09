@@ -12,4 +12,6 @@
 
 #include <GoonPhysics/bb.h>
 
+void gpResolveOverlapY(gpBB *lhs, gpBB *rhs);
+void gpResolveOverlapX(gpBB *lhs, gpBB *rhs);
 int gpIntersectBoxBox(gpBB* lhs, gpBB* rhs);

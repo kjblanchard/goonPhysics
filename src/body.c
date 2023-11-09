@@ -36,7 +36,7 @@ int gpBodyIsOnGround(gpBody *body)
     for (size_t i = 0; i < body->numOverlappingBodies; i++)
     {
         gpBody *overlap = body->overlappingBodies[i];
-        if (overlap->boundingBox.y > body->boundingBox.y + body->boundingBox.h)
+        if (overlap->boundingBox.y >= body->boundingBox.y + body->boundingBox.h)
             return 1;
     }
     return 0;

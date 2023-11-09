@@ -30,12 +30,11 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
 
     for (size_t i = 0; i < _currentNumBodies; i++)
     {
-        gpBody* body = _currentBodies[i];
+        gpBody *body = _currentBodies[i];
         body->numOverlappingBodies = 0;
         gpGravityBodyStep(body, &sceneGravity, gameTime);
         ApplyYVelocity(body, gameTime);
         ApplyXVelocity(body, gameTime);
-
     }
 }
 
@@ -57,6 +56,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
             int intersect = gpIntersectBoxBox(&body->boundingBox, &staticBody->boundingBox);
             if (intersect)
             {
+                gpResolveOverlapY(&body->boundingBox, &staticBody->boundingBox);
                 gpBodyAddOverlap(body, staticBody);
                 shouldStep = 0;
             }
@@ -68,7 +68,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
         {
             // If we are set to be blocked by the other body,
             // then set should step to 0, and revert body back to initial
-            body->boundingBox.y -= stepSize;
+            // body->boundingBox.y -= stepSize;
             body->velocity.y = 0.0;
             continue;
         }
@@ -104,14 +104,19 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
             gpBody *staticBody = _currentStaticBodies[i];
             int intersect = gpIntersectBoxBox(&body->boundingBox, &staticBody->boundingBox);
             if (intersect)
+            {
+
+                gpResolveOverlapX(&body->boundingBox, &staticBody->boundingBox);
+                gpBodyAddOverlap(body, staticBody);
                 shouldStep = 0;
+            }
         }
 
         if (!shouldStep)
         {
             // If we are set to be blocked by the other body,
             // then set should step to 0, and revert body back to initial
-            body->boundingBox.x -= stepSize;
+            // body->boundingBox.x -= stepSize;
             body->velocity.x = 0.0;
             continue;
         }
