@@ -13,21 +13,20 @@
 #include <GoonPhysics/vec.h>
 #include <stdlib.h>
 
-// typedef struct gpBodyOverlap {
-//     gpBody* body;
-//     gpBody* overlapBody;
-// } gpBodyOverlap;
 
 typedef struct gpBody
 {
+    int bodyType;
     gpBB boundingBox;
     gpVec velocity;
-    // int overlapWatcherCount;
-    // void** overlapWatchers;
+    int numOverlappingBodies;
+    struct gpBody** overlappingBodies;
 
 } gpBody;
 
 gpBody *gpBodyNew(gpBB boundingBox);
+void gpBodyAddOverlap(gpBody* body, gpBody* overlapBody);
+int gpBodyIsOnGround(gpBody* body);
 
 // void gpBodyAddWatcherFunc();
 

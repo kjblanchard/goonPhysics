@@ -30,12 +30,12 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
 
     for (size_t i = 0; i < _currentNumBodies; i++)
     {
-        gpGravityBodyStep(_currentBodies[i], &sceneGravity, gameTime);
-    }
-    for (size_t i = 0; i < _currentNumBodies; i++)
-    {
-        ApplyYVelocity(_currentBodies[i], gameTime);
-        ApplyXVelocity(_currentBodies[i], gameTime);
+        gpBody* body = _currentBodies[i];
+        body->numOverlappingBodies = 0;
+        gpGravityBodyStep(body, &sceneGravity, gameTime);
+        ApplyYVelocity(body, gameTime);
+        ApplyXVelocity(body, gameTime);
+
     }
 }
 
@@ -56,7 +56,10 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
             gpBody *staticBody = _currentStaticBodies[i];
             int intersect = gpIntersectBoxBox(&body->boundingBox, &staticBody->boundingBox);
             if (intersect)
+            {
+                gpBodyAddOverlap(body, staticBody);
                 shouldStep = 0;
+            }
         }
 
         // For body in bodies, if collides,
