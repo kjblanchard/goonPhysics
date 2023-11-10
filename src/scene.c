@@ -17,6 +17,7 @@ static gpBody **_currentStaticBodies;
 
 static void ApplyYVelocity(gpBody *body, float gameTime);
 static void ApplyXVelocity(gpBody *body, float gameTime);
+static void CheckForNonStaticOverlaps(gpBody* body, float gameTime);
 
 void gpSceneUpdate(gpScene *scene, float gameTime)
 {
@@ -31,11 +32,33 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
     for (size_t i = 0; i < _currentNumBodies; i++)
     {
         gpBody *body = _currentBodies[i];
+        if (!body->gravityEnabled)
+            continue;
         body->numOverlappingBodies = 0;
         gpGravityBodyStep(body, &sceneGravity, gameTime);
         ApplyYVelocity(body, gameTime);
         ApplyXVelocity(body, gameTime);
+        CheckForNonStaticOverlaps(body, gameTime);
     }
+}
+
+static void CheckForNonStaticOverlaps(gpBody* body, float gameTime)
+{
+        // Check for non static bodies
+        for (size_t i = 0; i < _currentNumBodies; i++)
+        {
+            gpBody *overlapBody = _currentBodies[i];
+            if (overlapBody == body)
+                continue;
+            int intersect = gpIntersectBoxBox(&body->boundingBox, &overlapBody->boundingBox);
+            if (intersect)
+            {
+                // gpResolveOverlapY(&body->boundingBox, &staticBody->boundingBox);
+                gpBodyAddOverlap(body, overlapBody);
+                // shouldStep = 0;
+            }
+        }
+
 }
 
 static void ApplyYVelocity(gpBody *body, float gameTime)
@@ -158,8 +181,9 @@ int gpSceneAddBody(gpBody *body)
         _currentCapacityBodies *= 2;
     }
     _currentBodies[_currentNumBodies] = body;
+    body->bodyNum = _currentNumBodies;
     ++_currentNumBodies;
-    return _currentNumBodies - 1;
+    return body->bodyNum;
 }
 int gpSceneAddStaticBody(gpBody *body)
 {

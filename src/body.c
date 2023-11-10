@@ -9,9 +9,11 @@ gpBody *gpBodyNew(gpBB boundingBox)
     body = calloc(1, sizeof(*body));
     body->overlappingBodies = calloc(MAX_OVERLAP_BODIES, sizeof(*body));
     body->bodyType = 1;
+    body->gravityEnabled = 1;
     body->numOverlappingBodies = 0;
     body->velocity = gpV(0, 0);
     body->boundingBox = boundingBox;
+    body->bodyNum = -1;
     return body;
 }
 

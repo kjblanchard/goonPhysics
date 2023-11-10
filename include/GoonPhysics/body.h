@@ -16,10 +16,12 @@
 
 typedef struct gpBody
 {
+    int bodyNum;
     int bodyType;
     gpBB boundingBox;
     gpVec velocity;
     int numOverlappingBodies;
+    int gravityEnabled;
     struct gpBody** overlappingBodies;
 
 } gpBody;
