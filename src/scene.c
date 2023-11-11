@@ -135,7 +135,6 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
                 shouldStep = 0;
             }
         }
-        CheckForNonStaticOverlaps(body, direction);
 
         if (!shouldStep)
         {
@@ -156,6 +155,7 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
             shouldStep = 0;
         }
     }
+    // CheckForNonStaticOverlaps(body, direction);
 }
 
 gpScene *gpInitScene(void)
