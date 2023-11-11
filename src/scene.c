@@ -5,6 +5,7 @@
 #include <GoonPhysics/body.h>
 #include <GoonPhysics/gravity.h>
 #include <GoonPhysics/aabb.h>
+#include <GoonPhysics/overlap.h>
 
 // Rigidbodies
 static int _currentNumBodies = 0;
@@ -17,7 +18,7 @@ static gpBody **_currentStaticBodies;
 
 static void ApplyYVelocity(gpBody *body, float gameTime);
 static void ApplyXVelocity(gpBody *body, float gameTime);
-static void CheckForNonStaticOverlaps(gpBody* body, float gameTime);
+static void CheckForNonStaticOverlaps(gpBody *body, int direction);
 
 void gpSceneUpdate(gpScene *scene, float gameTime)
 {
@@ -38,27 +39,24 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
         gpGravityBodyStep(body, &sceneGravity, gameTime);
         ApplyYVelocity(body, gameTime);
         ApplyXVelocity(body, gameTime);
-        CheckForNonStaticOverlaps(body, gameTime);
+        // CheckForNonStaticOverlaps(body, gameTime);
     }
 }
 
-static void CheckForNonStaticOverlaps(gpBody* body, float gameTime)
+static void CheckForNonStaticOverlaps(gpBody *body, int direction)
 {
-        // Check for non static bodies
-        for (size_t i = 0; i < _currentNumBodies; i++)
+    // Check for non static bodies
+    for (size_t i = 0; i < _currentNumBodies; i++)
+    {
+        gpBody *overlapBody = _currentBodies[i];
+        if (overlapBody == body)
+            continue;
+        int intersect = gpIntersectBoxBox(&body->boundingBox, &overlapBody->boundingBox);
+        if (intersect)
         {
-            gpBody *overlapBody = _currentBodies[i];
-            if (overlapBody == body)
-                continue;
-            int intersect = gpIntersectBoxBox(&body->boundingBox, &overlapBody->boundingBox);
-            if (intersect)
-            {
-                // gpResolveOverlapY(&body->boundingBox, &staticBody->boundingBox);
-                gpBodyAddOverlap(body, overlapBody);
-                // shouldStep = 0;
-            }
+            gpBodyAddOverlap(body, overlapBody, direction);
         }
-
+    }
 }
 
 static void ApplyYVelocity(gpBody *body, float gameTime)
@@ -73,6 +71,7 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
         body->boundingBox.y += stepSize;
         // Check for collisions for each static body
         // If it is a blocking body, then we should set shouldStep to False
+        int direction = stepSize > 0 ? gpOverlapDown : gpOverlapUp;
         for (size_t i = 0; i < _currentNumStaticBodies; i++)
         {
             gpBody *staticBody = _currentStaticBodies[i];
@@ -80,10 +79,11 @@ static void ApplyYVelocity(gpBody *body, float gameTime)
             if (intersect)
             {
                 gpResolveOverlapY(&body->boundingBox, &staticBody->boundingBox);
-                gpBodyAddOverlap(body, staticBody);
+                gpBodyAddOverlap(body, staticBody, direction);
                 shouldStep = 0;
             }
         }
+        CheckForNonStaticOverlaps(body, direction);
 
         // For body in bodies, if collides,
         // then send out notify for subscribers with info of collision bounding box and body num
@@ -114,6 +114,7 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
     float iterXStep = initialXStep;
     float stepSize = (int)initialXStep != 0 ? initialXStep > 0 ? 1 : -1 : initialXStep;
     int shouldStep = stepSize != 0 ? 1 : 0;
+    int direction = stepSize > 0 ? gpOverlapRight : gpOverlapLeft;
     while (shouldStep)
     {
         float bodyInitialX = body->boundingBox.x;
@@ -130,10 +131,11 @@ static void ApplyXVelocity(gpBody *body, float gameTime)
             {
 
                 gpResolveOverlapX(&body->boundingBox, &staticBody->boundingBox);
-                gpBodyAddOverlap(body, staticBody);
+                gpBodyAddOverlap(body, staticBody, direction);
                 shouldStep = 0;
             }
         }
+        CheckForNonStaticOverlaps(body, direction);
 
         if (!shouldStep)
         {

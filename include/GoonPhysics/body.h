@@ -22,14 +22,11 @@ typedef struct gpBody
     gpVec velocity;
     int numOverlappingBodies;
     int gravityEnabled;
-    struct gpBody** overlappingBodies;
+    struct gpOverlap** overlaps;
+
 
 } gpBody;
 
 gpBody *gpBodyNew(gpBB boundingBox);
-void gpBodyAddOverlap(gpBody* body, gpBody* overlapBody);
+void gpBodyAddOverlap(gpBody *body, gpBody *overlapBody, int direction);
 int gpBodyIsOnGround(gpBody* body);
-
-// void gpBodyAddWatcherFunc();
-
-

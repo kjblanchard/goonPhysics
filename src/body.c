@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <GoonPhysics/body.h>
+#include <GoonPhysics/overlap.h>
 
 #define MAX_OVERLAP_BODIES 10
 
@@ -7,7 +8,11 @@ gpBody *gpBodyNew(gpBB boundingBox)
 {
     gpBody *body;
     body = calloc(1, sizeof(*body));
-    body->overlappingBodies = calloc(MAX_OVERLAP_BODIES, sizeof(*body));
+    body->overlaps = calloc(MAX_OVERLAP_BODIES, sizeof(gpOverlap*));
+    for(size_t i = 0; i < MAX_OVERLAP_BODIES; ++i)
+    {
+        body->overlaps[i] = calloc(1, sizeof(gpOverlap));
+    }
     body->bodyType = 1;
     body->gravityEnabled = 1;
     body->numOverlappingBodies = 0;
@@ -24,11 +29,13 @@ gpBody *gpBodyNewStatic(gpBB boundingBox)
     return body;
 }
 
-void gpBodyAddOverlap(gpBody *body, gpBody *overlapBody)
+void gpBodyAddOverlap(gpBody *body, gpBody *overlapBody, int direction)
 {
     if (body->numOverlappingBodies < MAX_OVERLAP_BODIES)
     {
-        body->overlappingBodies[body->numOverlappingBodies] = overlapBody;
+        // body->overlappingBodies[body->numOverlappingBodies] = overlapBody;
+        body->overlaps[body->numOverlappingBodies]->overlapBody = overlapBody;
+        body->overlaps[body->numOverlappingBodies]->overlapDirection = direction;
         ++body->numOverlappingBodies;
     }
 }
@@ -37,7 +44,11 @@ int gpBodyIsOnGround(gpBody *body)
 {
     for (size_t i = 0; i < body->numOverlappingBodies; i++)
     {
-        gpBody *overlap = body->overlappingBodies[i];
+        // gpBody *overlap = body->overlappingBodies[i];
+        gpBody *overlap = body->overlaps[i]->overlapBody;
+        // If we are not a static body, then continue
+        if(overlap->bodyType)
+        continue;
         if (overlap->boundingBox.y >= body->boundingBox.y + body->boundingBox.h)
             return 1;
     }
