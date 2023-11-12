@@ -8,8 +8,8 @@ gpBody *gpBodyNew(gpBB boundingBox)
 {
     gpBody *body;
     body = calloc(1, sizeof(*body));
-    body->overlaps = calloc(MAX_OVERLAP_BODIES, sizeof(gpOverlap*));
-    for(size_t i = 0; i < MAX_OVERLAP_BODIES; ++i)
+    body->overlaps = calloc(MAX_OVERLAP_BODIES, sizeof(gpOverlap *));
+    for (size_t i = 0; i < MAX_OVERLAP_BODIES; ++i)
     {
         body->overlaps[i] = calloc(1, sizeof(gpOverlap));
     }
@@ -33,6 +33,14 @@ void gpBodyAddOverlap(gpBody *body, gpBody *overlapBody, int direction)
 {
     if (body->numOverlappingBodies < MAX_OVERLAP_BODIES)
     {
+        for (size_t i = 0; i < body->numOverlappingBodies; i++)
+        {
+            if (body->overlaps[i]->overlapBody == overlapBody)
+            {
+                return;
+            }
+        }
+
         // body->overlappingBodies[body->numOverlappingBodies] = overlapBody;
         body->overlaps[body->numOverlappingBodies]->overlapBody = overlapBody;
         body->overlaps[body->numOverlappingBodies]->overlapDirection = direction;
@@ -47,8 +55,8 @@ int gpBodyIsOnGround(gpBody *body)
         // gpBody *overlap = body->overlappingBodies[i];
         gpBody *overlap = body->overlaps[i]->overlapBody;
         // If we are not a static body, then continue
-        if(overlap->bodyType)
-        continue;
+        if (overlap->bodyType)
+            continue;
         if (overlap->boundingBox.y >= body->boundingBox.y + body->boundingBox.h)
             return 1;
     }
