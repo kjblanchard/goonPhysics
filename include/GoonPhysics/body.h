@@ -28,5 +28,7 @@ typedef struct gpBody
 } gpBody;
 
 gpBody *gpBodyNew(gpBB boundingBox);
+void gpBodySetPosition(gpBody* body, gpVec pos);
+void gpBodySetVelocity(gpBody* body, gpVec vel);
 void gpBodyAddOverlap(gpBody *body, gpBody *overlapBody, int direction);
 int gpBodyIsOnGround(gpBody* body);

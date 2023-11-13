@@ -22,6 +22,18 @@ gpBody *gpBodyNew(gpBB boundingBox)
     return body;
 }
 
+void gpBodySetPosition(gpBody* body, gpVec pos)
+{
+    body->boundingBox.x = pos.x;
+    body->boundingBox.y = pos.y;
+}
+
+void gpBodySetVelocity(gpBody* body, gpVec vel)
+{
+    body->velocity.x = vel.x;
+    body->velocity.y = vel.y;
+}
+
 gpBody *gpBodyNewStatic(gpBB boundingBox)
 {
     gpBody *body = gpBodyNew(boundingBox);
