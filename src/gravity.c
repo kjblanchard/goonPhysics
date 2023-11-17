@@ -1,28 +1,27 @@
+#include <math.h>
+#include <stdio.h>
 #include <GoonPhysics/gravity.h>
 
-static void GravityConstraintX(gpBody *body, double frictionStep, gpSceneGravity *sceneGravity)
+static void GravityConstraintX(gpBody *body, float deltaTime, gpSceneGravity *sceneGravity)
 {
     if (body->velocity.x == 0)
         return;
-    double step;
-    double max = sceneGravity->sceneMaxXVelocity;
-    if (body->velocity.x > 0)
+    // Apply friction
+    // int onGround = gpBodyIsOnGround(body);
+    // float friction = body->bodyOnGround ? sceneGravity->sceneFriction : sceneGravity->sceneFriction * 3;
+    float friction = sceneGravity->sceneFriction;
+    // body->velocity.x *= pow(sceneGravity->sceneFriction, deltaTime);
+    body->velocity.x *= pow(friction, deltaTime);
+    // Test if max or min is hit
+    if (fabs(body->velocity.x) > sceneGravity->sceneMaxXVelocity)
     {
-        step = body->velocity.x - frictionStep;
-        if (step > max)
-            step = max;
-        if (step < sceneGravity->sceneMinXVelocity)
-            step = 0;
+        body->velocity.x = copysignf(sceneGravity->sceneMaxXVelocity, body->velocity.x);
     }
-    else
+    // Check if the velocity has reached a minimum threshold to stop
+    if (fabs(body->velocity.x) < sceneGravity->sceneMinXVelocity)
     {
-        step = body->velocity.x + frictionStep;
-        if (step < -max)
-            step = -max;
-        if (step > -sceneGravity->sceneMinXVelocity)
-            step = 0;
+        body->velocity.x = 0;
     }
-    body->velocity.x = (float)step;
 }
 
 static void GravityConstraintY(gpBody *body, float gravityStep, gpSceneGravity *sceneGravity)
@@ -48,15 +47,15 @@ static void GravityConstraintY(gpBody *body, float gravityStep, gpSceneGravity *
 void gpGravityBodyStep(gpBody *body, gpSceneGravity *sceneGravity, float deltaTime)
 {
     float gravityStep = sceneGravity->sceneGravity * deltaTime;
-    float frictionStep = 2.5f;
-    int friction = 0;
-    if (friction)
+    float frictionStep = 0.0f;
+    // int friction = sceneGravity->sceneFriction;
+    if (sceneGravity->sceneFriction)
     {
-        frictionStep = friction * deltaTime;
+        frictionStep = sceneGravity->sceneFriction * deltaTime;
     }
 
     // Keep Y in Bounds for Max Speed
     GravityConstraintY(body, gravityStep, sceneGravity);
     // Keep X in Bounds for max Speed
-    GravityConstraintX(body, frictionStep, sceneGravity);
+    GravityConstraintX(body, deltaTime, sceneGravity);
 }

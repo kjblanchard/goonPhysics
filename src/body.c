@@ -14,6 +14,7 @@ gpBody *gpBodyNew(gpBB boundingBox)
         body->overlaps[i] = calloc(1, sizeof(gpOverlap));
     }
     body->bodyType = 1;
+    // body->bodyOnGround = 0;
     body->gravityEnabled = 1;
     body->numOverlappingBodies = 0;
     body->velocity = gpV(0, 0);
@@ -71,6 +72,9 @@ int gpBodyIsOnGround(gpBody *body)
             continue;
         if (overlap->boundingBox.y >= body->boundingBox.y + body->boundingBox.h)
             return 1;
+            // body->bodyOnGround = 1;
     }
+    // body->bodyOnGround = 0;
+    // return body->bodyOnGround;
     return 0;
 }

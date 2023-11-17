@@ -24,11 +24,12 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
 {
     gpSceneGravity sceneGravity;
     sceneGravity.sceneGravity = scene->gravity;
-    sceneGravity.sceneFriction = 0.0f;
+    // sceneGravity.sceneFriction = 2.25f;
+    sceneGravity.sceneFriction = 0.25;
     sceneGravity.sceneMaxXVelocity = 100000;
     sceneGravity.sceneMaxYVelocity = 100000;
     sceneGravity.sceneMinYVelocity = 0.001;
-    sceneGravity.sceneMinXVelocity = 0.001;
+    sceneGravity.sceneMinXVelocity = 10;
 
     for (size_t i = 0; i < _currentNumBodies; i++)
     {

@@ -22,6 +22,7 @@ typedef struct gpBody
     gpVec velocity;
     int numOverlappingBodies;
     int gravityEnabled;
+    // int bodyOnGround;
     struct gpOverlap** overlaps;
 
 
