@@ -36,8 +36,9 @@ void gpSceneUpdate(gpScene *scene, float gameTime)
         gpBody *body = _currentBodies[i];
         if (!body->gravityEnabled)
             continue;
-        body->numOverlappingBodies = 0;
         gpGravityBodyStep(body, &sceneGravity, gameTime);
+        // Remove overlap bodies after gravity is updated.
+        body->numOverlappingBodies = 0;
         ApplyYVelocity(body, gameTime);
         ApplyXVelocity(body, gameTime);
         // CheckForNonStaticOverlaps(body, gameTime);

@@ -7,9 +7,9 @@ static void GravityConstraintX(gpBody *body, float deltaTime, gpSceneGravity *sc
     if (body->velocity.x == 0)
         return;
     // Apply friction
-    // int onGround = gpBodyIsOnGround(body);
-    // float friction = body->bodyOnGround ? sceneGravity->sceneFriction : sceneGravity->sceneFriction * 3;
-    float friction = sceneGravity->sceneFriction;
+    int onGround = gpBodyIsOnGround(body);
+    float friction = onGround ? sceneGravity->sceneFriction : sceneGravity->sceneFriction * 3;
+    // float friction = sceneGravity->sceneFriction;
     // body->velocity.x *= pow(sceneGravity->sceneFriction, deltaTime);
     body->velocity.x *= pow(friction, deltaTime);
     // Test if max or min is hit
