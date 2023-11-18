@@ -1,6 +1,6 @@
 #include <GoonPhysics/bb.h>
 
-gpBB gpBBNew(float x, float y, float w, float h)
+gpBB gpBBNew(double x, double y, double w, double h)
 {
     gpBB boundingBox;
     boundingBox.x = x;

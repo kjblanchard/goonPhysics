@@ -11,8 +11,8 @@
 #pragma once
 
 typedef struct gpBB {
-    float x, y, w, h;
+    double x, y, w, h;
 } gpBB;
 
-gpBB gpBBNew(float x, float y, float w, float h);
+gpBB gpBBNew(double x, double y, double w, double h);
 gpBB gpBBCopy(gpBB body);

@@ -52,7 +52,7 @@ void gpResolveOverlap(gpBB *lhs, gpBB *rhs)
 {
     gpBB result;
 
-    float Amin, Amax, Bmin, Bmax;
+    double Amin, Amax, Bmin, Bmax;
 
     /* Horizontal intersection */
     Amin = lhs->x;
@@ -81,7 +81,7 @@ void gpResolveOverlap(gpBB *lhs, gpBB *rhs)
     // Resolve overlap independently in x and y directions
     if (result.h > 0) {
         // Determine the direction of overlap for the y-axis
-        float overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
+        double overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
 
         // Resolve overlap in the y-axis
         lhs->y += overlapY;
@@ -89,7 +89,7 @@ void gpResolveOverlap(gpBB *lhs, gpBB *rhs)
 
     if (result.w > 0) {
         // Determine the direction of overlap for the x-axis
-        float overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
+        double overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
 
         // Resolve overlap in the x-axis
         lhs->x += overlapX;
@@ -99,7 +99,7 @@ void gpResolveOverlapY(gpBB *lhs, gpBB *rhs)
 {
        gpBB result;
 
-    float Amin, Amax, Bmin, Bmax;
+    double Amin, Amax, Bmin, Bmax;
 
     /* Horizontal intersection */
     Amin = lhs->x;
@@ -128,7 +128,7 @@ void gpResolveOverlapY(gpBB *lhs, gpBB *rhs)
         // Resolve overlap independently in x and y directions
     // if (result.w > 0) {
     //     // Determine the direction of overlap for the x-axis
-    //     float overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
+    //     double overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
 
     //     // Resolve overlap in the x-axis
     //     lhs->x += overlapX;
@@ -136,7 +136,7 @@ void gpResolveOverlapY(gpBB *lhs, gpBB *rhs)
 
     if (result.h > 0) {
         // Determine the direction of overlap for the y-axis
-        float overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
+        double overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
 
         // Resolve overlap in the y-axis
         lhs->y += overlapY;
@@ -149,7 +149,7 @@ void gpResolveOverlapX(gpBB *lhs, gpBB *rhs)
 {
        gpBB result;
 
-    float Amin, Amax, Bmin, Bmax;
+    double Amin, Amax, Bmin, Bmax;
 
     /* Horizontal intersection */
     Amin = lhs->x;
@@ -178,7 +178,7 @@ void gpResolveOverlapX(gpBB *lhs, gpBB *rhs)
         // Resolve overlap independently in x and y directions
     if (result.w > 0) {
         // Determine the direction of overlap for the x-axis
-        float overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
+        double overlapX = (lhs->x + lhs->w / 2 < rhs->x + rhs->w / 2) ? -result.w : result.w;
 
         // Resolve overlap in the x-axis
         lhs->x += overlapX;
@@ -186,7 +186,7 @@ void gpResolveOverlapX(gpBB *lhs, gpBB *rhs)
 
     // if (result.h > 0) {
     //     // Determine the direction of overlap for the y-axis
-    //     float overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
+    //     double overlapY = (lhs->y + lhs->h / 2 < rhs->y + rhs->h / 2) ? -result.h : result.h;
 
     //     // Resolve overlap in the y-axis
     //     lhs->y += overlapY;
